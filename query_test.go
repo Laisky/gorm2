@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"reflect"
 
-	"github.com/jinzhu/gorm"
+	"github.com/Laisky/gorm"
 
 	"testing"
 	"time"
@@ -496,8 +496,8 @@ func TestLimitAndOffsetSQL(t *testing.T) {
 			limit:  float64(2),
 			offset: float64(2),
 			users: []*User{
-				&User{Name: "TestLimitAndOffsetSQL3", Age: 30},
-				&User{Name: "TestLimitAndOffsetSQL2", Age: 20},
+				{Name: "TestLimitAndOffsetSQL3", Age: 30},
+				{Name: "TestLimitAndOffsetSQL2", Age: 20},
 			},
 			ok: true,
 		},

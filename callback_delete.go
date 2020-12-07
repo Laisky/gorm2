@@ -34,16 +34,30 @@ func deleteCallback(scope *Scope) {
 		}
 
 		deletedAtField, hasDeletedAtField := scope.FieldByName("DeletedAt")
+		deletedFlagField, hasDeletedFlagField := scope.FieldByName("DeletedFlag")
 
-		if !scope.Search.Unscoped && hasDeletedAtField {
-			scope.Raw(fmt.Sprintf(
-				"UPDATE %v SET %v=%v%v%v",
-				scope.QuotedTableName(),
-				scope.Quote(deletedAtField.DBName),
-				scope.AddToVars(scope.db.nowFunc()),
-				addExtraSpaceIfExist(scope.CombinedConditionSql()),
-				addExtraSpaceIfExist(extraOption),
-			)).Exec()
+		if !scope.Search.Unscoped {
+			// compatable with unique index and soft delete
+			if hasDeletedAtField && hasDeletedFlagField {
+				scope.Raw(fmt.Sprintf(
+					"UPDATE %v SET %v=%v, %v=id%v%v",
+					scope.QuotedTableName(),
+					scope.Quote(deletedAtField.DBName),
+					scope.AddToVars(scope.db.nowFunc()),
+					scope.Quote(deletedFlagField.DBName),
+					addExtraSpaceIfExist(scope.CombinedConditionSql()),
+					addExtraSpaceIfExist(extraOption),
+				)).Exec()
+			} else if hasDeletedAtField {
+				scope.Raw(fmt.Sprintf(
+					"UPDATE %v SET %v=%v%v%v",
+					scope.QuotedTableName(),
+					scope.Quote(deletedAtField.DBName),
+					scope.AddToVars(scope.db.nowFunc()),
+					addExtraSpaceIfExist(scope.CombinedConditionSql()),
+					addExtraSpaceIfExist(extraOption),
+				)).Exec()
+			}
 		} else {
 			scope.Raw(fmt.Sprintf(
 				"DELETE FROM %v%v%v",
