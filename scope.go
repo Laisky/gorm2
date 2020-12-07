@@ -1231,6 +1231,17 @@ func (scope *Scope) addIndex(unique bool, indexName string, column ...string) {
 		sqlCreate = "CREATE UNIQUE INDEX"
 	}
 
+	// if `deleted_flag` exists,
+	// auto create unique index associated with `deleted_flag`.
+	//
+	// `deleted_flag` will be set to `id`, to make sure unique index can work appropriately.
+	for _, f := range scope.GetStructFields() {
+		if f.DBName == "deleted_flag" {
+			columns = append(columns, f.DBName)
+			break
+		}
+	}
+
 	scope.Raw(fmt.Sprintf("%s %v ON %v(%v) %v", sqlCreate, indexName, scope.QuotedTableName(), strings.Join(columns, ", "), scope.whereSQL())).Exec()
 }
 
