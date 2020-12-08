@@ -1,10 +1,10 @@
 # GORM Compatable with Unique Index
 
-Fork from and fully compatable with: [jinzhu/gorm v1.9.16](https://github.com/jinzhu/gorm)
+Fork from and fully compatible with: [jinzhu/gorm v1.9.16](https://github.com/jinzhu/gorm)
 
 
 ```sh
-go get github.com/Laisky/gorm v1.9.17
+go get github.com/Laisky/gorm v1.9.18
 ```
 
 ## New Features
@@ -14,7 +14,7 @@ go get github.com/Laisky/gorm v1.9.17
 
 #### 1. Add `DeletedFlag` in model struct
 
-(or embeded `gorm.ModelCompatableWithUnique`)
+(or embeded `gorm.ModelSupportUnique`)
 
 ```go
 type Model struct {

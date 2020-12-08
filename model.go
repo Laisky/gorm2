@@ -13,8 +13,8 @@ type Model struct {
 	DeletedAt *time.Time `sql:"index"`
 }
 
-// ModelCompatableWithUnique add `deleted_flag` with Model
-type ModelCompatableWithUnique struct {
+// ModelSupportUnique add `deleted_flag` with Model
+type ModelSupportUnique struct {
 	Model
 	DeletedFlag uint `gorm:"type:INT UNSIGNED DEFAULT 0 NOT NULL"`
 }
