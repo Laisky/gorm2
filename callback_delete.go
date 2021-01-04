@@ -34,11 +34,10 @@ func deleteCallback(scope *Scope) {
 		}
 
 		deletedAtField, hasDeletedAtField := scope.FieldByName("DeletedAt")
-		deletedFlagField, hasDeletedFlagField := scope.FieldByName("DeletedFlag")
-
-		if !scope.Search.Unscoped {
+		if !scope.Search.Unscoped && hasDeletedAtField {
 			// compatable with unique index and soft delete
-			if hasDeletedAtField && hasDeletedFlagField {
+			deletedFlagField, hasDeletedFlagField := scope.FieldByName("DeletedFlag")
+			if hasDeletedFlagField {
 				scope.Raw(fmt.Sprintf(
 					"UPDATE %v SET %v=%v, %v=id%v%v",
 					scope.QuotedTableName(),
@@ -48,7 +47,7 @@ func deleteCallback(scope *Scope) {
 					addExtraSpaceIfExist(scope.CombinedConditionSql()),
 					addExtraSpaceIfExist(extraOption),
 				)).Exec()
-			} else if hasDeletedAtField {
+			} else {
 				scope.Raw(fmt.Sprintf(
 					"UPDATE %v SET %v=%v%v%v",
 					scope.QuotedTableName(),
