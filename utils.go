@@ -25,8 +25,16 @@ var NowFunc = func() time.Time {
 var commonInitialisms = []string{"API", "ASCII", "CPU", "CSS", "DNS", "EOF", "GUID", "HTML", "HTTP", "HTTPS", "ID", "IP", "JSON", "LHS", "QPS", "RAM", "RHS", "RPC", "SLA", "SMTP", "SSH", "TLS", "TTL", "UID", "UI", "UUID", "URI", "URL", "UTF8", "VM", "XML", "XSRF", "XSS"}
 var commonInitialismsReplacer *strings.Replacer
 
-var goSrcRegexp = regexp.MustCompile(`(?:laisky|jinzhu)/gorm(?:@.*)?/.*.go`)
-var goTestRegexp = regexp.MustCompile(`(?:laisky|jinzhu)/gorm(?:@.*)?/.*test.go`)
+var logFileIgnored = []*regexp.Regexp{
+	regexp.MustCompile(`(?:laisky|jinzhu)/gorm(?:@.*)?/.*.go`),
+}
+
+var logFileNotIgnore = regexp.MustCompile(`(?:laisky|jinzhu)/gorm(?:@.*)?/.*test.go`)
+
+// AddLogFileIgnoreStackPattern file name pattern that will not ignored
+func AddLogFileIgnoreStackPattern(logFilePattern *regexp.Regexp) {
+	logFileIgnored = append(logFileIgnored, logFilePattern)
+}
 
 func init() {
 	var commonInitialismsForReplacer []string
@@ -115,10 +123,20 @@ func toQueryValues(values [][]interface{}) (results []interface{}) {
 	return
 }
 
+func isLogFileIgnore(file string) bool {
+	for _, r := range logFileIgnored {
+		if r.MatchString(file) {
+			return true
+		}
+	}
+
+	return false
+}
+
 func fileWithLineNum() string {
 	for i := 2; i < 15; i++ {
 		_, file, line, ok := runtime.Caller(i)
-		if ok && (!goSrcRegexp.MatchString(file) || goTestRegexp.MatchString(file)) {
+		if ok && (logFileNotIgnore.MatchString(file) || !isLogFileIgnore(file)) {
 			return fmt.Sprintf("%v:%v", file, line)
 		}
 	}
