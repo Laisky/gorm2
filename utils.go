@@ -32,8 +32,8 @@ var logFileIgnored = []*regexp.Regexp{
 var logFileNotIgnore = regexp.MustCompile(`(?:laisky|jinzhu)/gorm(?:@.*)?/.*test.go`)
 
 // AddLogFileIgnoreStackPattern file name pattern that will not ignored
-func AddLogFileIgnoreStackPattern(logFilePattern *regexp.Regexp) {
-	logFileIgnored = append(logFileIgnored, logFilePattern)
+func AddLogFileIgnoreStackPattern(logFilePattern ...*regexp.Regexp) {
+	logFileIgnored = append(logFileIgnored, logFilePattern...)
 }
 
 func init() {
