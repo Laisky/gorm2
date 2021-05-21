@@ -26,6 +26,10 @@ type Scope struct {
 	selectAttrs     *[]string
 }
 
+func (scode *Scope) SetDB(db *DB) {
+	scode.db = db
+}
+
 // IndirectValue return scope's reflect value's indirect value
 func (scope *Scope) IndirectValue() reflect.Value {
 	return indirect(reflect.ValueOf(scope.Value))
