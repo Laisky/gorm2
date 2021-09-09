@@ -5,7 +5,7 @@ install:
 
 lint:
 	go mod tidy
-	goimports -local oogway,library,common -w .
+	goimports -local github.com/Laisky/gorm -w .
 	gofmt -s -w .
 	golangci-lint run -E golint,depguard,gocognit,goconst,gofmt,misspell,exportloopref,nilerr #,gosec,lll
 

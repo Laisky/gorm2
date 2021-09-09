@@ -21,13 +21,14 @@ import (
 	"testing"
 	"time"
 
+	"github.com/erikstmartin/go-testdb"
+	"github.com/jinzhu/now"
+
 	"github.com/Laisky/gorm"
 	_ "github.com/Laisky/gorm/dialects/mssql"
 	_ "github.com/Laisky/gorm/dialects/mysql"
 	"github.com/Laisky/gorm/dialects/postgres"
 	_ "github.com/Laisky/gorm/dialects/sqlite"
-	"github.com/erikstmartin/go-testdb"
-	"github.com/jinzhu/now"
 )
 
 var (

@@ -7,8 +7,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Laisky/gorm"
 	"github.com/jinzhu/now"
+
+	"github.com/Laisky/gorm"
 )
 
 func TestCreate(t *testing.T) {
