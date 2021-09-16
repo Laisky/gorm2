@@ -13,6 +13,27 @@ import (
 
 var gormSourceDir string
 
+var logFileIgnored = []*regexp.Regexp{
+	regexp.MustCompile(`(?:Laisky|jinzhu|gorm\.io)/gorm(?:@.*)?/.*.go`),
+}
+
+var logFileNotIgnore = regexp.MustCompile(`(?:Laisky|jinzhu|gorm\.io)/gorm(?:@.*)?/.*test.go`)
+
+// AddLogFileIgnoreStackPattern file name pattern that will not ignored
+func AddLogFileIgnoreStackPattern(logFilePattern ...*regexp.Regexp) {
+	logFileIgnored = append(logFileIgnored, logFilePattern...)
+}
+
+func isLogFileIgnore(file string) bool {
+	for _, r := range logFileIgnored {
+		if r.MatchString(file) {
+			return true
+		}
+	}
+
+	return false
+}
+
 func init() {
 	_, file, _, _ := runtime.Caller(0)
 	// compatible solution to get gorm source directory with various operating systems
@@ -24,7 +45,7 @@ func FileWithLineNum() string {
 	// the second caller usually from gorm internal, so set i start from 2
 	for i := 2; i < 15; i++ {
 		_, file, line, ok := runtime.Caller(i)
-		if ok && (!strings.HasPrefix(file, gormSourceDir) || strings.HasSuffix(file, "_test.go")) {
+		if ok && (logFileNotIgnore.MatchString(file) || !isLogFileIgnore(file)) {
 			return file + ":" + strconv.FormatInt(int64(line), 10)
 		}
 	}
