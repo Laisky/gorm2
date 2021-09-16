@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"sort"
 	"sync"
+	"sync/atomic"
 	"time"
 
 	"github.com/Laisky/gorm/v2/clause"
@@ -15,6 +16,22 @@ import (
 
 // for Config.cacheStore store PreparedStmtDB key
 const preparedStmtDBKey = "preparedStmt"
+
+type AtomicField struct {
+	v int64
+}
+
+func (a *AtomicField) True() bool {
+	return atomic.LoadInt64(&a.v) == 1
+}
+
+func (a *AtomicField) SetTrue() {
+	atomic.StoreInt64(&a.v, 1)
+}
+
+func (a *AtomicField) SetFalse() {
+	atomic.StoreInt64(&a.v, 0)
+}
 
 // Config GORM config
 type Config struct {
@@ -45,6 +62,8 @@ type Config struct {
 	QueryFields bool
 	// CreateBatchSize default create batch size
 	CreateBatchSize int
+
+	logSQLResult AtomicField
 
 	// ClauseBuilders clause builder
 	ClauseBuilders map[string]clause.ClauseBuilder
@@ -292,6 +311,7 @@ func (db *DB) WithContext(ctx context.Context) *DB {
 
 // Debug start debug mode
 func (db *DB) Debug() (tx *DB) {
+	db.LogSQLResult(true)
 	return db.Session(&Session{
 		Logger: db.Logger.LogMode(logger.Info),
 	})
@@ -378,6 +398,17 @@ func (db *DB) getInstance() *DB {
 
 func Expr(expr string, args ...interface{}) clause.Expr {
 	return clause.Expr{SQL: expr, Vars: args}
+}
+
+// LogSQLResult log sql with result
+func (db *DB) LogSQLResult(isLogResult bool) *DB {
+	if isLogResult {
+		db.logSQLResult.SetTrue()
+	} else {
+		db.logSQLResult.SetFalse()
+	}
+
+	return db
 }
 
 func (db *DB) SetupJoinTable(model interface{}, field string, joinTable interface{}) error {

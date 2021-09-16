@@ -10,6 +10,7 @@ go get -u github.com/Laisky/gorm/v2
 ## New Features
 
 1. soft-detele & unique-index
+2. log SQL result
 
 ### Compatible with soft-delete and unique-index
 
@@ -44,4 +45,10 @@ will execute SQL like:
 
 ```sql
 update model set deleted_at = NOW(), deleted_flag = id where id = 1
+```
+
+### Log SQL Result
+
+```go
+db = db.LogSQLResult(true)
 ```

@@ -131,7 +131,12 @@ func (p *processor) Execute(db *DB) *DB {
 	}
 
 	db.Logger.Trace(stmt.Context, curTime, func() (string, int64) {
-		return db.Dialector.Explain(stmt.SQL.String(), stmt.Vars...), db.RowsAffected
+		sql := db.Dialector.Explain(stmt.SQL.String(), stmt.Vars...)
+		if db.logSQLResult.True() {
+			sql = fmt.Sprintf("%s => %v", sql, stmt.Dest)
+		}
+
+		return sql, db.RowsAffected
 	}, db.Error)
 
 	if !stmt.DB.DryRun {
