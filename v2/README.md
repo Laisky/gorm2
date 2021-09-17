@@ -1,6 +1,6 @@
 # GORM v2 Compatable with Unique Index
 
-Fork from and fully compatible with: [jinzhu/gorm v1.21.14](https://github.com/go-gorm/gorm)
+Fork from and fully compatible with: [go-gorm/gorm v1.21.14](https://github.com/go-gorm/gorm)
 
 
 ```sh

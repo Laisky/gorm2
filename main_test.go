@@ -1432,7 +1432,6 @@ func TestWhereUpdates(t *testing.T) {
 }
 
 func BenchmarkGorm(b *testing.B) {
-	b.N = 2000
 	for x := 0; x < b.N; x++ {
 		e := strconv.Itoa(x) + "benchmark@example.org"
 		now := time.Now()
@@ -1456,7 +1455,6 @@ func BenchmarkRawSql(b *testing.B) {
 	updateSql := "UPDATE emails SET email = $1, updated_at = $2 WHERE id = $3"
 	deleteSql := "DELETE FROM orders WHERE id = $1"
 
-	b.N = 2000
 	for x := 0; x < b.N; x++ {
 		var id int64
 		e := strconv.Itoa(x) + "benchmark@example.org"
