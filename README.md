@@ -70,12 +70,16 @@ gorm.AddLogFileIgnoreStackPattern(
 )
 ```
 
+supported tags: eq, lt, lte, gt, gte, in, ints, strs, like, like-bin
+
+more details in `tag.go`
+
+
 ### Support ignore specified SQL log by regexp
 
 ```go
 type Request struct {
 	HostID          uint         `form:"host_id" sql:"column:h.id;op:eq"`
-	HostIPs         string       `form:"host_ips" sql:"column:h.ip;op:ips"`
 	HostName        string       `form:"host_name" sql:"column:h.name;op:like"`
 }
 
@@ -83,7 +87,6 @@ req := new(Request)
 db = gorm.ApplySQLCondition(db, req)
 // equal to:
 //   db = db.Where("h.id = ?", req.HostID).
-//       Where("h.ip IN (?)", strings.Split(req.HostIPs, ",")).
 //       Where("h.id LIKE %?%", req.HostName)
 
 ```

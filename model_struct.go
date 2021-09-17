@@ -45,7 +45,7 @@ func (s *ModelStruct) TableName(db *DB) string {
 		} else {
 			tableName := ToTableName(s.ModelType.Name())
 			db.parent.RLock()
-			if db == nil || (db.parent != nil && !db.parent.singularTable) {
+			if db.parent != nil && !db.parent.singularTable {
 				tableName = inflection.Plural(tableName)
 			}
 			db.parent.RUnlock()

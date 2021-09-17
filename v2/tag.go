@@ -23,7 +23,7 @@ func AddCustomSQLTagCondition(op string, f ConditionTagFunc) {
 //
 //   HostName  string  `sql:"column:h.name;op:eq"`
 //
-//   will generate DB with `Where("h.name = ?", <value of this field>)`
+// will generate DB with `Where("h.name = ?", <value of this field>)`
 func ApplySQLCondition(db *DB, req interface{}) (*DB, error) {
 	sv := reflect.ValueOf(req)
 	if sv.Kind() == reflect.Ptr {

@@ -67,6 +67,10 @@ gorm.AddLogFileIgnoreStackPattern(
 )
 ```
 
+supported tags: eq, lt, lte, gt, gte, in, ints, strs, like, like-bin
+
+more details in `tag.go`
+
 ### Log SQL Result
 
 ```go
