@@ -67,12 +67,28 @@ gorm.AddLogFileIgnoreStackPattern(
 )
 ```
 
-supported tags: eq, lt, lte, gt, gte, in, ints, strs, like, like-bin
-
-more details in `tag.go`
-
 ### Log SQL Result
 
 ```go
 db = db.LogSQLResult(true)
 ```
+
+### Generate SQL condition by tag
+
+```go
+type Request struct {
+	HostID          uint         `form:"host_id" sql:"column:h.id;op:eq"`
+	HostName        string       `form:"host_name" sql:"column:h.name;op:like"`
+}
+
+req := new(Request)
+db = gorm.ApplySQLCondition(db, req)
+// equal to:
+//   db = db.Where("h.id = ?", req.HostID).
+//       Where("h.id LIKE %?%", req.HostName)
+
+```
+
+supported tags: `eq`, `lt`, `lte`, `gt`, `gte`, `in`, `ints`, `strs`, `like`, `like-bin`
+
+more details in `tag.go`
